@@ -358,47 +358,23 @@ int kpayload(struct thread *td){
 	*(char *)(kernel_base + 0x1B7D0C8) |= 0x1;//
 	
 	//TID
-	*(char *)(kernel_base + 0x1B7D08D) = 0x81;//
+	*(char *)(kernel_base + 0x1B7D08D) = 0x82;//
 
 	// debug menu full patches
 	*(uint32_t *)(kernel_base + 0x4D8777) = 0;//
 	*(uint32_t *)(kernel_base + 0x4D9601) = 0;//
 
-	// enable mmap of all SELF 5.05
-	/*uint8_t* map_self_patch1 = &kernel_ptr[0x169820];
-    uint8_t* map_self_patch2 = &kernel_ptr[0x169810];
-    uint8_t* map_self_patch3 = &kernel_ptr[0x143277];
-
-    // sceSblACMgrIsAllowedToMmapSelf result
-    kmem = (uint8_t*)map_self_patch1;
-    kmem[0] = 0xB8;
-    kmem[1] = 0x01;
-    kmem[2] = 0x00;
-    kmem[3] = 0x00;
-    kmem[4] = 0x00;
-    kmem[5] = 0xC3;
-
-    // sceSblACMgrHasMmapSelfCapability result
-    kmem = (uint8_t*)map_self_patch2;
-    kmem[0] = 0xB8;
-    kmem[1] = 0x01;
-    kmem[2] = 0x00;
-    kmem[3] = 0x00;
-    kmem[4] = 0x00;
-    kmem[5] = 0xC3;
-
-    // sceSblAuthMgrIsLoadable bypass
-    kmem = (uint8_t*)map_self_patch3;
-    kmem[0] = 0x31;
-    kmem[1] = 0xC0;
-    kmem[2] = 0x90;
-    kmem[3] = 0x90;
-    kmem[4] = 0x90;
-	*/
 	// Restore write protection
 	writeCr0(cr0);
 
 	return 0;
+}
+
+void notify(char *message)
+{
+	char buffer[512];
+	sprintf(buffer, "%s\n\n\n\n\n\n\n", message);
+	sceSysUtilSendSystemNotificationWithText(0x81, buffer);
 }
 
 int _main(struct thread *td)
@@ -419,5 +395,6 @@ int _main(struct thread *td)
   
   do_patch();
   
-  return !result ? 0 : errno;
+  initSysUtil();
+  notify("Welcome to PS4HEN v1.5");
 }

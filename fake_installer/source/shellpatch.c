@@ -223,48 +223,34 @@ void do_patch()
 	initNetwork();
 	initPthread();
 	
-	struct sockaddr_in server;
+	int result;
 
-	server.sin_len = sizeof(server);
-	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = IP(192, 168, 1, 6);
-	server.sin_port = sceNetHtons(9023);
-	memset(server.sin_zero, 0, sizeof(server.sin_zero));
-	sock = sceNetSocket("debug", AF_INET, SOCK_STREAM, 0);
-	sceNetConnect(sock, (struct sockaddr *)&server, sizeof(server));
-	int flag = 1;
-sceNetSetsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(int));
+	int shell_pid = find_process("SceShellCore");
+	if (shell_pid < 0)
+	{
+		return;
+	}
+	
 
-  int result;
+	/*
+	int sys_pid = find_process("SceSysCore");
+	if (sys_pid < 0)
+	{
+	// printfsocket("Failed to find SceSysCore: %d\n", sys_pid);
+	return;
+	}
+	printfsocket("Found SceSysCore at pid %d!\n", sys_pid);
+	*/
 
-  int shell_pid = find_process("SceShellCore");
-  if (shell_pid < 0)
-  {
-	printfsocket("Failed to find SceShellCore: %d\n", shell_pid);
-    return;
-  }
-  printfsocket("Found SceShellCore at pid %d!\n", shell_pid);
+	result = mount_procfs();
+	if (result)
+	{
+		return;
+	}
 
-  /*
-  int sys_pid = find_process("SceSysCore");
-  if (sys_pid < 0)
-  {
-   // printfsocket("Failed to find SceSysCore: %d\n", sys_pid);
-    return;
-  }
-  printfsocket("Found SceSysCore at pid %d!\n", sys_pid);
-  */
-
-  result = mount_procfs();
-  if (result)
-  {
-    return;
-  }
-
-  printfsocket("Patching SceShellCore...\n");
-  apply_patches(shell_pid, 0xFFC000, shellcore_patches);
-  printfsocket("after patchs...\n");
-  //printfsocket("Patching SceSysCore...\n");
-  //apply_patches(sys_pid, 0xC4000, syscore_patches);
+	
+	apply_patches(shell_pid, 0xFFC000, shellcore_patches);
+	//printfsocket("Patching SceSysCore...\n");
+	//apply_patches(sys_pid, 0xC4000, syscore_patches);
 
 }

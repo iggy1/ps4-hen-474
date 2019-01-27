@@ -107,6 +107,10 @@ struct real_info real_infos[] PAYLOAD_DATA =
   { 0x3F87A0, &real_free },
   { 0x149D40, &real_memcpy },
   { 0x017F30, &real_printf },
+  { 0x244EE0, &real_memcmp },
+  { 0x304DD0, &real_memset },
+  
+  
   { 0x617AB0, &real_sceSblServiceMailbox },
   { 0x629040, &real_sceSblAuthMgrIsLoadable2 },
   { 0x626640, &real_sceSblAuthMgrVerifyHeader },
@@ -118,8 +122,7 @@ struct real_info real_infos[] PAYLOAD_DATA =
   { 0x2528CC0, &fpu_ctx },
   { 0x2529310, &sbl_pfs_sx },
  
-  { 0x244EE0, &real_memcmp },
-  { 0x304DD0, &real_memset },
+  
    
   { 0x390850, &real_sx_xlock },
   { 0x3909E0, &real_sx_xunlock },
@@ -142,17 +145,8 @@ struct real_info real_infos[] PAYLOAD_DATA =
   { 0x6109E0, &sceSblKeymgrSetKeyForPfs},
   { 0x603CA0, &sceSblDriverSendMsg},
   { 0x179720, &AesCbcCfb128Encrypt},
-  
-
   { 0x3F0070, &real_RsaesPkcs1v15Dec2048CRT },
-  
-  
-  
 
-  
-
-  
-  
   { 0, NULL },
 };
 

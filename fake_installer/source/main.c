@@ -360,6 +360,39 @@ int kpayload(struct thread *td){
 	//TID
 	*(char *)(kernel_base + 0x1B7D08D) = 0x82;//
 
+	//uart
+	*(char *)(kernel_base + 0x199FC18) = 0x00;//
+	
+	// Get more info on fatal trap by extending output before doing coredump
+
+	*(char *)(kernel_base + 0x3DCC77) |= 0x90;//
+	*(char *)(kernel_base + 0x3DCC78) |= 0x90;//
+	*(char *)(kernel_base + 0x3DCC79) |= 0x90;//
+	*(char *)(kernel_base + 0x3DCC7A) |= 0x90;//
+	*(char *)(kernel_base + 0x3DCC7B) |= 0x90;//
+    
+	// Allow System Level Debugging
+    
+	*(char *)(kernel_base + 0x169790) |= 0xB8;//
+	*(char *)(kernel_base + 0x169791) |= 0x01;//
+	*(char *)(kernel_base + 0x169792) |= 0x00;//
+	*(char *)(kernel_base + 0x169793) |= 0x00;//
+	*(char *)(kernel_base + 0x169794) |= 0x00;//
+	*(char *)(kernel_base + 0x169795) |= 0xC3;//
+	*(char *)(kernel_base + 0x169796) |= 0x90;//
+    
+	// SblACMgr Allow Coredump
+
+	*(char *)(kernel_base + 0x1697B0) |= 0xB8;//
+	*(char *)(kernel_base + 0x1697B1) |= 0x01;//
+	*(char *)(kernel_base + 0x1697B2) |= 0x00;//
+	*(char *)(kernel_base + 0x1697B3) |= 0x00;//
+	*(char *)(kernel_base + 0x1697B4) |= 0x00;//
+	*(char *)(kernel_base + 0x1697B5) |= 0xC3;//
+	*(char *)(kernel_base + 0x1697B6) |= 0x90;//
+	
+	
+
 	// debug menu full patches
 	*(uint32_t *)(kernel_base + 0x4D8777) = 0;//
 	*(uint32_t *)(kernel_base + 0x4D9601) = 0;//
